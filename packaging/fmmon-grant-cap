@@ -1,0 +1,29 @@
+#!/bin/sh
+# fmmon-grant-cap: grant CAP_NET_RAW to an fmmon binary so it can open a packet
+# socket. Invoked through pkexec, so it already runs as root - it is not setuid.
+#
+# This is the only privileged component. polkit authorises THIS helper rather
+# than fmmon itself, because running a GUI as root cannot reach a Wayland
+# session (no Xauthority cookie, session D-Bus refuses root).
+set -e
+
+target="$1"
+
+if [ -z "$target" ]; then
+	echo "usage: fmmon-grant-cap <path-to-fmmon>" >&2
+	exit 2
+fi
+
+# Refuse anything that is not an existing regular executable file. A symlink
+# here would let a caller aim the grant at a different inode via TOCTOU, and a
+# directory or device node is never a valid target.
+if [ ! -f "$target" ] || [ ! -x "$target" ]; then
+	echo "fmmon-grant-cap: $target is not an executable regular file" >&2
+	exit 3
+fi
+
+# Resolve symlinks so the capability lands on the real binary rather than the
+# link, which would silently do nothing.
+real=$(readlink -f "$target")
+
+exec /usr/bin/setcap cap_net_raw=+ep "$real"

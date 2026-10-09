@@ -1,0 +1,338 @@
+:root {
+    --bg: #181818;
+    --panel: #202020;
+    --panel-hover: #2a2a2a;
+    --border: #303030;
+    --text: #e8e8e8;
+    --muted: #9b9b9b;
+    --accent: #1f6feb;
+    --green: #389e4e;
+    --red: #da3633;
+    --amber: #9e6a03;
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--bg);
+}
+
+#root { min-height: 100vh; }
+
+.app-shell {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.topbar {
+    height: 44px;
+    padding: 0 10px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #1c1c1c;
+}
+
+.topbar-right { display: flex; gap: 4px; }
+
+.pill {
+    background: transparent;
+    border: none;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 11px;
+    color: var(--muted);
+}
+
+.pill:not(:last-child) {
+    border-right: 1px solid var(--border);
+}
+
+.muted { color: var(--muted); }
+
+.app-body {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+}
+
+.sidenav {
+    width: 180px;
+    border-right: 1px solid var(--border);
+    background: rgba(21, 25, 34, 0.7);
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.sidenav button {
+    all: unset;
+    padding: 10px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--muted);
+}
+
+.sidenav button:hover { background: #1b2230; color: var(--text); }
+.sidenav button.active { background: #1b2230; color: var(--text); }
+
+.content {
+    flex: 1;
+    min-width: 0;
+    padding: 10px;
+}
+
+.page h2 { margin: 0 0 2px; font-size: 16px; }
+.page-header p { margin: 0 0 8px; color: var(--muted); font-size: 12px; }
+
+.table-wrap {
+    overflow: auto;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--panel);
+}
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 12px;
+}
+
+thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    text-align: left;
+    padding: 7px 10px;
+    border-bottom: 1px solid #383838;
+    background: #222222;
+    color: var(--muted);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+thead th.rate-head {
+    text-align: right;
+}
+
+tbody td {
+    padding: 6px 10px;
+    border-bottom: 1px solid #2d2d2d;
+    vertical-align: middle;
+}
+
+tbody tr:last-child td { border-bottom: 0; }
+
+tbody tr:hover td { background: rgba(255, 255, 255, 0.03); }
+
+.rate-cell {
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    color: #9fd0ff;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text);
+    border-radius: 4px;
+    padding: 1px 6px;
+    margin-right: 4px;
+    font-size: 11px;
+    text-transform: capitalize;
+}
+
+.badge-blocked {
+    border-color: #6e2b2b;
+    background: rgba(220, 80, 80, 0.14);
+    color: #f08a8a;
+}
+
+.badge-limited {
+    border-color: #6b5320;
+    background: rgba(220, 170, 60, 0.14);
+    color: #e5c069;
+}
+
+.badge-reachable {
+    border-color: #245c3a;
+    background: rgba(70, 180, 110, 0.14);
+    color: #78d99f;
+}
+
+.status-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+.status-dot.spoofed { background: var(--accent); }
+.status-dot.limited { background: var(--amber); }
+.status-dot.blocked { background: var(--red); }
+
+.controls-col {
+    text-align: right;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+.controls-col .device-controls {
+    justify-content: flex-end;
+}
+
+.device-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+}
+
+.rate-control {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    min-height: 22px;
+    padding: 0 2px;
+    color: var(--text);
+    font-size: 11px;
+    flex: none;
+}
+
+.rate-label {
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1;
+}
+
+.rate-input, .rate-select {
+    background-color: #1d1d1d;
+    border: 1px solid #383838;
+    border-radius: 3px;
+    padding: 2px 6px;
+    font-size: 11px;
+    line-height: 1.2;
+    min-width: 0;
+}
+
+.rate-input { width: 64px; flex: none; }
+.rate-select { width: 58px; flex: none; }
+
+.rate-select option {
+    background: #1d1d1d;
+    color: #e8e8e8;
+}
+
+.rate-pair {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    flex: none;
+}
+
+.apply-btn {
+    flex: none;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text);
+    border-radius: 3px;
+    padding: 3px 8px;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.apply-btn:hover {
+    background: #333;
+    border-color: var(--accent);
+}
+
+.limit-note {
+    display: block;
+    color: #e5c069;
+    font-size: 10px;
+    line-height: 1.2;
+}
+
+.error-bar {
+    margin: 0 0 8px;
+    padding: 6px 10px;
+    border: 1px solid #6e2b2b;
+    border-radius: 4px;
+    background: rgba(220, 80, 80, 0.12);
+    color: #f08a8a;
+    font-size: 11px;
+}
+
+.block-check {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text);
+    font-size: 11px;
+    min-height: 22px;
+    padding: 0 2px;
+    flex: none;
+}
+
+.block-check input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    border: 1px solid #383838;
+    border-radius: 3px;
+    background: #1d1d1d;
+    display: inline-grid;
+    place-content: center;
+    margin: 0;
+    cursor: pointer;
+}
+
+.block-check input[type="checkbox"]::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    background: #1f6feb;
+    display: none;
+}
+
+.block-check input[type="checkbox"]:checked::before {
+    display: block;
+}
+
+.block-check input[type="checkbox"]:focus-visible {
+    outline: 1px solid #1f6feb;
+    outline-offset: 1px;
+}
+
+.actions button {
+    margin-right: 4px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text);
+    border-radius: 4px;
+    padding: 4px 8px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.actions button:hover { background: #333; border-color: var(--accent); }
+
+.placeholder { color: var(--muted); }

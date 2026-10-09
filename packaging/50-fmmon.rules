@@ -1,0 +1,41 @@
+// Restricts which binaries may receive CAP_NET_RAW through fmmon-grant-cap.
+//
+// The .policy pins exec.path to the helper, which proves the caller really is
+// the helper. It does NOT constrain the helper's ARGUMENT. And
+// org.freedesktop.policykit.exec.argv1 is an exact match with no globbing, so
+// it cannot express "any fmmon under these directories". This rule closes that
+// gap by reading the helper's own argv out of the recorded command line.
+//
+// Note on lookup("command_line"): for a pkexec invocation this is the HELPER's
+// command line, not the caller's. The target path the helper receives is its
+// first argument, so it must be parsed out of that string - checking
+// command_line itself would match the helper path and never the target.
+
+polkit.addRule(function (action, subject) {
+    if (action.id !== "net.spoofer.grantcap") {
+        return undefined;
+    }
+
+    var command = action.lookup("command_line") || "";
+    var parts = command.trim().split(/\s+/);
+    var target = parts.length > 1 ? parts[1] : "";
+
+    // Allowed targets. Every entry widens who can obtain a raw-socket
+    // capability, so keep this list as narrow as the workflow allows.
+    var allowed = ["/usr/local/bin/fmmon", "/opt/fmmon/fmmon"];
+    if (subject.user === "saif") {
+        var devRoot = "/home/saif/Dev/personal-projects/GolangPrrrr/spoofer";
+        allowed.push(devRoot + "/bin/fmmon");
+        allowed.push(devRoot + "/spoofer");
+    }
+
+    for (var i = 0; i < allowed.length; i++) {
+        if (target === allowed[i]) {
+            return polkit.Result.YES;
+        }
+    }
+
+    // Deny explicitly. Returning undefined would leave the .policy default
+    // (auth_admin_keep) in force, letting any path be granted after a prompt.
+    return polkit.Result.NO;
+});

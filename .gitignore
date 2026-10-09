@@ -1,0 +1,27 @@
+# Build output
+bin/
+spoofer
+*.exe
+
+# Dependencies
+node_modules/
+
+# Generated Wails task state
+.task/
+checksum/
+
+# Generated macOS packaging assets.
+# NOTE: build/*/Taskfile.yml is NOT ignored - the root Taskfile.yml includes
+# those six files and wails3 dev/build fail without them.
+build/darwin/*.png
+build/darwin/*.icns
+build/darwin/*.car
+build/linux/appimage/
+
+# Wails generated bindings and frontend build (regenerated every build)
+frontend/bindings/
+frontend/dist/
+
+# IDE / OS
+*.rdi
+.DS_Store

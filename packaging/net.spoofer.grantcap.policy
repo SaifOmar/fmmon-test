@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policyconfig PUBLIC "-//freedesktop//DTD polkit Policy Configuration 1.0//EN"
+ "http://www.freedesktop.org/software/polkit/policyconfig-1.dtd">
+<policyconfig>
+
+  <vendor>NetControl</vendor>
+  <vendor_url>https://github.com/saif/spoofer</vendor_url>
+  <icon_name>network-wired</icon_name>
+
+  <action id="net.spoofer.grantcap">
+    <description>Grant packet capture capability to fmmon</description>
+    <message>Authentication is required to let fmmon read network packets.</message>
+
+    <defaults>
+      <!-- Local sessions: an admin authenticates, cached so this prompts once
+           per session rather than on every launch. auth_admin resolves to the
+           acting user for anyone in the wheel group. -->
+      <allow_active>auth_admin_keep</allow_active>
+      <!-- Not over SSH (inactive) and not with nobody logged in. -->
+      <allow_inactive>no</allow_inactive>
+      <allow_any>no</allow_any>
+    </defaults>
+
+    <!-- The security boundary. polkitd verifies the binary being authorised
+         really is this helper, so a caller cannot claim the action id for its
+         own program. Without this annotation the policy is decorative. -->
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/local/bin/fmmon-grant-cap</annotate>
+  </action>
+
+</policyconfig>
